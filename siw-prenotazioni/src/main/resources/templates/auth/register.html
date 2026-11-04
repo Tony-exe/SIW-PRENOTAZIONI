@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</title>
+</head>
+<body>
+	<header>
+		<h1 th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</h1>
+    </header>
+	<main>
+        <form th:action="@{/register}" method="post">
+            <label for="nome">Nome</label>
+            <input type="text" th:field="${user.nome}" id="nome" required>
+            <span th:if="${#fields.hasErrors('${user.nome}')}" th:errors="${user.nome}"></span>
+
+            <label for="cognome">Cognome</label>
+            <input type="text" th:field="${user.cognome}" id="cognome" required>
+            <span th:if="${#fields.hasErrors('${user.cognome}')}" th:errors="${user.cognome}"></span>
+            
+            <label for="email">E-mail</label>
+            <input type="email" th:field="${user.email}" id="email" required>
+            <span th:if="${#fields.hasErrors('${user.email}')}" th:errors="${user.email}"></span>
+            
+            <label for="username">Username</label>
+            <input type="text" th:field="${credentials.username}" id="username" required>
+            <span th:if="${#fields.hasErrors('${credentials.username}')}" th:errors="${credentials.username}"></span>
+            
+            <label for="password">Password</label>
+            <input type="password" th:field="${credentials.password}" id="password" required>
+            <span th:if="${#fields.hasErrors('${credentials.password}')}" th:errors="${credentials.password}"></span>
+
+            <button type="submit">Registrati</button>
+        </form>
+	</main>
+</body>
+</html>
