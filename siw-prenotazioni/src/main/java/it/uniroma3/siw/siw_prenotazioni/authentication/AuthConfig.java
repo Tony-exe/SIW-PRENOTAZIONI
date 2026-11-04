@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import it.uniroma3.siw.siw_prenotazioni.model.Role;
 
 @Configuration
+@EnableWebSecurity
 public class AuthConfig {
     
     private final DataSource dataSource;
@@ -42,7 +44,7 @@ public class AuthConfig {
     // 1. AUTORIZZAZIONI: chi può accedere a cosa
     http.authorizeHttpRequests(auth -> {
         auth.requestMatchers(HttpMethod.GET, "/", "/index", "/login", "/register",
-                "/servizi", "/servizi/**", "/css/**", "/images/**", "/favicon.ico").permitAll();
+                "/servizi", "/servizi/**", "/css/**", "/images/**", "/favicon.ico", "/error").permitAll();
         auth.requestMatchers(HttpMethod.POST, "/login", "/register").permitAll();
         auth.requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name());
         auth.anyRequest().authenticated();

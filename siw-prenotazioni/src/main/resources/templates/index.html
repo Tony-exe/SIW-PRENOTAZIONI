@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</title>
+</head>
+<body>
+	<header>
+		<h1 th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</h1>
+        <nav>
+            <a th:href="@{/login}" sec:authorize="isAnonymous()">Accedi</a>
+            <a th:href="@{/register}" sec:authorize="isAnonymous()">Registrati</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button type="submit">Esci</button>
+            </form>
+        </nav>
+    </header>
+	<main>
+		<p>Benvenuto nella pagina delle prenotazioni.</p>
+	</main>
+</body>
+</html>
