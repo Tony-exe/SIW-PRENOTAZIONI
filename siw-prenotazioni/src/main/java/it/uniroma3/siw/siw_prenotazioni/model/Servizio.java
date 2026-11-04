@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +35,10 @@ public class Servizio {
     @NotNull
     @PositiveOrZero
     private Float prezzo;
+
+    @ManyToOne
+    @JoinColumn (nullable = false)
+    private Insegnante insegnante;
 
     public Servizio() {}
     
@@ -69,6 +75,10 @@ public class Servizio {
         return prezzo;
     }
 
+    public Insegnante getInsegnante() {
+        return insegnante;
+    }
+
     /*
     *
     * SETTER 
@@ -93,6 +103,10 @@ public class Servizio {
 
     public void setPrezzo(Float prezzo) {
         this.prezzo = prezzo;
+    }
+
+    public void setInsegnante(Insegnante insegnante) {
+        this.insegnante = insegnante;
     }
 
     @Override

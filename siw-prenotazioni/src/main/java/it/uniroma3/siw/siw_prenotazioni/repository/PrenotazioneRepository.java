@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import it.uniroma3.siw.siw_prenotazioni.model.Insegnante;
 import it.uniroma3.siw.siw_prenotazioni.model.Prenotazione;
 import it.uniroma3.siw.siw_prenotazioni.model.Servizio;
 import it.uniroma3.siw.siw_prenotazioni.model.User;
 
 public interface PrenotazioneRepository extends CrudRepository<Prenotazione, Long>{
-    List<Prenotazione> findByServizioAndData(Servizio servizio, LocalDate data);
+    @Query("SELECT p FROM Prenotazione p JOIN FETCH p.servizio where p.servizio.insegnante = :insegnante and p.data = :data")
+    List<Prenotazione> findByInsegnanteAndData(@Param("insegnante") Insegnante insegnante, @Param("data") LocalDate data);
 
     @Query("SELECT p FROM Prenotazione p JOIN FETCH p.servizio where p.user = :user order by p.data, p.ora")
     List<Prenotazione> findByUserOrderByDataOra(@Param("user") User user);

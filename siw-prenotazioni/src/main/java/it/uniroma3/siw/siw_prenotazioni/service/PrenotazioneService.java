@@ -50,12 +50,13 @@ public class PrenotazioneService {
     }
 
     private void controllaSovrapposizioni(Servizio servizio, LocalDate data, LocalTime ora, Long idDaEscludere){
-        Integer durata = servizio.getDurata();
-        
-        for(Prenotazione prenotazione : prenotazioneRepository.findByServizioAndData(servizio, data)){
+        LocalTime fine = ora.plusMinutes(servizio.getDurata());
+
+        for(Prenotazione prenotazione : prenotazioneRepository.findByInsegnanteAndData(servizio.getInsegnante(), data)){
             if(!prenotazione.getId().equals(idDaEscludere)){
-                LocalTime p_ora = prenotazione.getOra();
-                if(ora.plusMinutes(durata).isAfter(p_ora) && p_ora.plusMinutes(durata).isAfter(ora)){
+                LocalTime oraEsistente = prenotazione.getOra();
+                LocalTime fineEsistente = oraEsistente.plusMinutes(prenotazione.getServizio().getDurata());
+                if(fine.isAfter(oraEsistente) && fineEsistente.isAfter(ora)){
                     throw new SlotNonDisponibileException(ora);
                 }
             }
