@@ -8,6 +8,7 @@
 <body>
 	<header>
 		<h1 th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</h1>
+        <span sec:authorize="isAuthenticated()" th:text="'Ciao, ' + ${userDetails.username} + ' '">Ciao</span>
         <nav>
             <a th:href="@{/login}" sec:authorize="isAnonymous()">Accedi</a>
             <a th:href="@{/register}" sec:authorize="isAnonymous()">Registrati</a>

@@ -1,6 +1,9 @@
 package it.uniroma3.siw.siw_prenotazioni.controller;
 
 import it.uniroma3.siw.siw_prenotazioni.service.CredentialsService;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import it.uniroma3.siw.siw_prenotazioni.exception.EmailExistsException;
 import it.uniroma3.siw.siw_prenotazioni.exception.UsernameExistsException;
 import it.uniroma3.siw.siw_prenotazioni.model.Credentials;
+import it.uniroma3.siw.siw_prenotazioni.model.Role;
 import it.uniroma3.siw.siw_prenotazioni.model.User;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 
@@ -54,6 +59,16 @@ public class AuthController {
             userBindingResult.rejectValue("email", "user.duplicate", e.getMessage());
             return "auth/register";
         }
+    }
+
+    @GetMapping("/success")
+    public String success(Authentication authentication) {
+        for(GrantedAuthority authority : authentication.getAuthorities()){
+            if(authority.getAuthority().equals(Role.ADMIN.name())){
+                return "redirect:/admin/servizi";
+            }
+        }
+        return "redirect:/";
     }
     
     
