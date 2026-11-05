@@ -14,7 +14,7 @@
     </header>
     <main>
         <h2><a th:text="${servizio.nome}" th:href="@{'/servizi/'+ ${servizio.id}}">Materia</a></h2>
-        <form th:action="@{'/prenotazioni/new/' + ${servizio.id}}" method="post" th:object="${prenotazione}">
+        <form th:action="${prenotazione.id == null} ? @{'/prenotazioni/new/' + ${servizio.id}} : @{'/prenotazioni/' + ${prenotazione.id} + '/edit'}" method="post" th:object="${prenotazione}">
             <label for="data">Data prenotazione</label>
             <input type="date" th:field="*{data}" id="data" required>
             <span th:if="${#fields.hasErrors('data')}" th:errors="*{data}"></span>

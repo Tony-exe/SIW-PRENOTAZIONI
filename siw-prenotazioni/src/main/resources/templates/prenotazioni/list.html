@@ -25,6 +25,7 @@
                     <th>Data</th>
                     <th>Ora</th>
                     <th>Insegnante</th>
+                    <th>Azioni</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +34,12 @@
                     <td th:text="${p.data}">Data</td>
                     <td th:text="${p.ora}">Ora</td>
                     <td th:text="${p.servizio.insegnante.nome}+ ' ' + ${p.servizio.insegnante.cognome}">Insegnante</td>
+                    <td>
+                        <form th:action="@{'/prenotazioni/' + ${p.id} + '/delete'}" method="post" onsubmit="return confirm('Annullare questa prenotazione?')">
+                            <button type="submit">Annulla</button>
+                        </form>
+                        <a th:href="@{'/prenotazioni/' + ${p.id} + '/edit'}">Modifica</a>
+                    </td>
                 </tr>
             </tbody>
         </table>

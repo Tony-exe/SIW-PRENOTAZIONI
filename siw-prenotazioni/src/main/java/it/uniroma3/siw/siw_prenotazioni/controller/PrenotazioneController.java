@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import it.uniroma3.siw.siw_prenotazioni.exception.AccessoNegatoException;
 import it.uniroma3.siw.siw_prenotazioni.exception.FuoriOrarioException;
+import it.uniroma3.siw.siw_prenotazioni.exception.PrenotazioneNotFoundException;
 import it.uniroma3.siw.siw_prenotazioni.exception.SlotNonDisponibileException;
 import it.uniroma3.siw.siw_prenotazioni.model.Prenotazione;
 import it.uniroma3.siw.siw_prenotazioni.model.Servizio;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 @Controller
 public class PrenotazioneController {
@@ -72,6 +73,42 @@ public class PrenotazioneController {
     public String prenotazioniHome(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         model.addAttribute("prenotazioni", prenotazioneService.getMiePrenotazioni(utenteCorrente(userDetails)));
         return "prenotazioni/list";
+    }
+    
+    @PostMapping("/prenotazioni/{id}/delete")
+    public String delete(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
+        try {
+            prenotazioneService.annulla(id, utenteCorrente(userDetails));
+            redirectAttributes.addFlashAttribute("messaggio", "Prenotazione annullata");
+        } catch (AccessoNegatoException | PrenotazioneNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errore", e.getMessage());
+        }
+        return "redirect:/prenotazioni";
+    }
+
+    @GetMapping("/prenotazioni/{id}/edit")
+    public String editForm(@PathVariable("id") Long id, Model model) {
+        Prenotazione p = prenotazioneService.getPrenotazione(id);
+        model.addAttribute("prenotazione", p);
+        return mostraForm(model, p.getServizio().getId());
+    }
+    
+    
+    @PostMapping("/prenotazioni/{id}/edit")
+    public String edit(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes, @Valid @ModelAttribute Prenotazione prenotazione, BindingResult bindingResult, Model model) {
+        Long servizioId = prenotazioneService.getPrenotazione(id).getServizio().getId();
+        if(bindingResult.hasErrors()){
+            prenotazione.setId(id);
+            return mostraForm(model, servizioId);
+        }try {
+            prenotazioneService.modifica(id, prenotazione.getData(), prenotazione.getOra(), utenteCorrente(userDetails));
+        } catch (PrenotazioneNotFoundException | SlotNonDisponibileException | FuoriOrarioException | AccessoNegatoException e) {
+            bindingResult.rejectValue("ora", "prenotazione.nonValida", e.getMessage());
+            prenotazione.setId(id);
+            return mostraForm(model, servizioId);
+        }
+        redirectAttributes.addFlashAttribute("messaggio", "Prenotazione modificata");
+        return "redirect:/prenotazioni";
     }
     
 }
