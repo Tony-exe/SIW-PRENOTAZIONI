@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -74,6 +75,19 @@ public class PrenotazioneService {
         if(!p.getUser().equals(user)){
             throw new AccessoNegatoException();
         }
+    }
+
+    // Orari di inizio possibili per una lezione della durata indicata:
+    // dall'apertura in poi, a passi di "durata" minuti, finché la lezione finisce entro la chiusura.
+    // Es. durata 60 -> 9:00, 10:00, ..., 18:00
+    public List<LocalTime> getOrariInizio(int durata){
+        List<LocalTime> orari = new ArrayList<>();
+        LocalTime inizio = ORA_APERTURA;
+        while (!inizio.plusMinutes(durata).isAfter(ORA_CHIUSURA)){
+            orari.add(inizio);
+            inizio = inizio.plusMinutes(durata);
+        }
+        return orari;
     }
 
     @Transactional (isolation = Isolation.SERIALIZABLE)

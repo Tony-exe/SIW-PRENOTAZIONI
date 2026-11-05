@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import it.uniroma3.siw.siw_prenotazioni.exception.FuoriOrarioException;
 import it.uniroma3.siw.siw_prenotazioni.exception.SlotNonDisponibileException;
 import it.uniroma3.siw.siw_prenotazioni.model.Prenotazione;
+import it.uniroma3.siw.siw_prenotazioni.model.Servizio;
 import it.uniroma3.siw.siw_prenotazioni.model.User;
 import it.uniroma3.siw.siw_prenotazioni.service.CredentialsService;
 import it.uniroma3.siw.siw_prenotazioni.service.PrenotazioneService;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 
 @Controller
@@ -41,15 +41,16 @@ public class PrenotazioneController {
     }
 
     private String mostraForm(Model model, Long id){
-        model.addAttribute("servizio", servizioService.getServizio(id));
+        Servizio servizio = servizioService.getServizio(id);
+        model.addAttribute("servizio", servizio);
+        model.addAttribute("orari", prenotazioneService.getOrariInizio(servizio.getDurata()));
         return "prenotazioni/form";
     }
 
     @GetMapping("/prenotazioni/new/{servizioId}")
-    public String prenotaForm(@PathVariable ("servizioId") Long servizioId, @AuthenticationPrincipal UserDetails userDetails, Model model) {
-        model.addAttribute("servizio", servizioService.getServizio(servizioId));
+    public String prenotaForm(@PathVariable ("servizioId") Long servizioId, Model model) {
         model.addAttribute("prenotazione", new Prenotazione());
-        return "prenotazioni/form";
+        return mostraForm(model, servizioId);
     }
 
     @PostMapping("/prenotazioni/new/{servizioId}")
@@ -67,5 +68,10 @@ public class PrenotazioneController {
         return "redirect:/prenotazioni";
     }
     
+    @GetMapping("/prenotazioni")
+    public String prenotazioniHome(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("prenotazioni", prenotazioneService.getMiePrenotazioni(utenteCorrente(userDetails)));
+        return "prenotazioni/list";
+    }
     
 }

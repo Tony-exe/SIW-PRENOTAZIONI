@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazioni</title>
+</head>
+
+<body>
+    <header>
+        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
+    </header>
+    <main>
+        <h2 th:if="${messaggio}" th:text="${messaggio}"></h2>
+        <p th:if="${errore}" th:text="${errore}"></p>
+
+        <p th:if="${prenotazioni.isEmpty()}">Nessuna prenotazione fatta</p>
+        <a th:href="@{/servizi}">Prenota una lezione</a>
+
+        <table th:if="${!prenotazioni.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Materia</th>
+                    <th>Data</th>
+                    <th>Ora</th>
+                    <th>Insegnante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${prenotazioni}">
+                    <td th:text="${p.servizio.nome}">Nome materia</td>
+                    <td th:text="${p.data}">Data</td>
+                    <td th:text="${p.ora}">Ora</td>
+                    <td th:text="${p.servizio.insegnante.nome}+ ' ' + ${p.servizio.insegnante.cognome}">Insegnante</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+
+</html>

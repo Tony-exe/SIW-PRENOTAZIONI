@@ -14,6 +14,7 @@
             <a th:href="@{/register}" sec:authorize="isAnonymous()">Registrati</a>
             <a th:href="@{/admin/servizi}" sec:authorize="hasAuthority('ADMIN')">Materie</a>
             <a th:href="@{/servizi}" sec:authorize="!hasAuthority('ADMIN')">Materie</a>
+            <a th:href="@{/prenotazioni}" sec:authorize="isAuthenticated()">Le tue prenotazioni</a>
             <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
                 <button type="submit">Esci</button>
             </form>
