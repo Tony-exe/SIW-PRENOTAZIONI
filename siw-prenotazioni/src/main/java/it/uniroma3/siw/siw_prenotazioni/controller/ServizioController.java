@@ -18,16 +18,15 @@ public class ServizioController {
     }
 
     @GetMapping("/servizi")
-    public String getMethodName(Model model) {
+    public String allServizi(Model model) {
         model.addAttribute("servizi", servizioService.getTuttiServizi());
         return "servizi/list";
     }
 
     @GetMapping("/servizi/{id}")
-    public String getMethodName(@PathVariable("id") Long id, Model model) {
+    public String getServizioId(@PathVariable("id") Long id, Model model) {
         model.addAttribute("servizio", servizioService.getServizio(id));
         return "servizi/show";
     }
-    
     
 }

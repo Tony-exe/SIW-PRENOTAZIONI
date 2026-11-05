@@ -12,11 +12,19 @@
         <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
     </header>
     <main>
+        <p th:if="${errore}" th:text="${errore}">Errore</p>
+
+        <a th:href="@{/admin/servizi/new}">Nuova materia</a>
         <p th:if="${servizi.isEmpty()}">Nessuna materia disponibile</p>
         <ul>
             <li th:each="servizio : ${servizi}">
                 <a th:href="@{'/servizi/' + ${servizio.id}}" th:text="${servizio.nome}">Materia</a>
                 <span th:text="' - ' + ${servizio.insegnante.nome} + ' ' + ${servizio.insegnante.cognome}">- Mario Rossi</span>
+                <a th:href="@{'/admin/servizi/' + ${servizio.id} + '/edit'}">Modifica</a>
+
+                <form th:action="@{'/admin/servizi/' + ${servizio.id} + '/delete'}" method="post" onsubmit="return confirm('Eliminare questa materia?')">
+                    <button type="submit">Elimina</button>
+                </form>
             </li>
         </ul>
     </main>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${servizio.id == null} ? 'Nuova materia' : 'Modifica materia' ">Nuova materia</title>
+</head>
+
+<body>
+    <header>
+        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
+        <a th:href="@{/servizi}">Tutte le materie</a>
+    </header>
+    <main>
+        <form th:action="${servizio.id == null} ? @{/admin/servizi/new} : @{'/admin/servizi/' + ${servizio.id}}" method="post" th:object="${servizio}">
+            <label for="nome">Nome</label>
+            <input type="text" th:field="*{nome}" id="nome" required>
+            <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></span>
+
+            <label for="descrizione">Descrizione</label>
+            <textarea th:field="*{descrizione}" id="descrizione"></textarea>
+            <span th:if="${#fields.hasErrors('descrizione')}" th:errors="*{descrizione}"></span>
+
+            <label for="durata">Durata</label>
+            <input type="number" min="1" th:field="*{durata}" id="durata" required>
+            <span th:if="${#fields.hasErrors('durata')}" th:errors="*{durata}"></span>
+
+            <label for="prezzo">Prezzo</label>
+            <input type="number" min="1" step="0.01" th:field="*{prezzo}" id="prezzo" required>
+            <span th:if="${#fields.hasErrors('prezzo')}" th:errors="*{prezzo}"></span>
+
+            <label for="insegnante">Insegnante</label>
+            <select id="insegnante" name="insegnanteId" required>
+                <option th:each="insegnante : ${insegnanti}" th:value="${insegnante.id}" th:text="${insegnante.nome} + ' ' + ${insegnante.cognome}"
+                th:selected="${servizio.insegnante != null and servizio.insegnante.id == insegnante.id}">Insegnante</option>
+            </select>
+
+            <button type="submit">Salva</button>
+            <a th:href="@{/admin/servizi}">Annulla</a>
+        </form>
+    </main>
+</body>
+
+</html>
