@@ -14,6 +14,7 @@
     <main>
         <p th:if="${errore}" th:text="${errore}">Errore</p>
 
+        <a th:href="@{/admin/prenotazioni}">Tutte le prenotazioni</a>
         <a th:href="@{/admin/servizi/new}">Nuova materia</a>
         <p th:if="${servizi.isEmpty()}">Nessuna materia disponibile</p>
         <ul>

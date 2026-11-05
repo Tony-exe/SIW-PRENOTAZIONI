@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica prenotazione</title>
+</head>
+
+<body>
+    <header>
+        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
+        <a th:href="@{/admin/prenotazioni}">Tutte le prenotazioni</a>
+    </header>
+    <main>
+        <h2 th:text="'Modifica prenotazione - ' + ${servizio.nome}">Modifica prenotazione</h2>
+        <form th:action="@{'/admin/prenotazioni/' + ${prenotazione.id} + '/edit'}" method="post" th:object="${prenotazione}">
+            <label for="data">Data</label>
+            <input type="date" th:field="*{data}" id="data" required>
+            <span th:if="${#fields.hasErrors('data')}" th:errors="*{data}"></span>
+
+            <label for="ora">Orario</label>
+            <select th:field="*{ora}" id="ora" required>
+                <option value="">Scegli un orario</option>
+                <option th:each="o : ${orari}" th:value="${o}"
+                    th:text="${o} + ' - ' + ${o.plusMinutes(servizio.durata)}">10:00 - 11:00</option>
+            </select>
+            <span th:if="${#fields.hasErrors('ora')}" th:errors="*{ora}"></span>
+
+            <p>Lezioni dal lunedì al sabato.</p>
+
+            <button type="submit">Salva</button>
+            <a th:href="@{/admin/prenotazioni}">Annulla</a>
+        </form>
+    </main>
+</body>
+
+</html>

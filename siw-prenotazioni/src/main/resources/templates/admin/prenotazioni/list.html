@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutte le prenotazioni</title>
+</head>
+
+<body>
+    <header>
+        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
+        <a th:href="@{/admin/servizi}">Gestione materie</a>
+    </header>
+    <main>
+        <h2>Tutte le prenotazioni</h2>
+        <p th:if="${messaggio}" th:text="${messaggio}"></p>
+        <p th:if="${errore}" th:text="${errore}"></p>
+
+        <p th:if="${prenotazioni.isEmpty()}">Nessuna prenotazione presente</p>
+
+        <table th:if="${!prenotazioni.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Ora</th>
+                    <th>Materia</th>
+                    <th>Insegnante</th>
+                    <th>Utente</th>
+                    <th>Email</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${prenotazioni}">
+                    <td th:text="${#temporals.format(p.data, 'dd/MM/yyyy')}">01/12/2026</td>
+                    <td th:text="${p.ora} + ' - ' + ${p.ora.plusMinutes(p.servizio.durata)}">10:00 - 11:00</td>
+                    <td th:text="${p.servizio.nome}">Matematica</td>
+                    <td th:text="${p.servizio.insegnante.nome} + ' ' + ${p.servizio.insegnante.cognome}">Mario Rossi</td>
+                    <td th:text="${p.user.nome} + ' ' + ${p.user.cognome}">Nome Cognome</td>
+                    <td th:text="${p.user.email}">email</td>
+                    <td>
+                        <a th:href="@{'/admin/prenotazioni/' + ${p.id} + '/edit'}">Modifica</a>
+                        <form th:action="@{'/admin/prenotazioni/' + ${p.id} + '/delete'}" method="post"
+                            onsubmit="return confirm('Annullare questa prenotazione?')">
+                            <button type="submit">Annulla</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+
+</html>

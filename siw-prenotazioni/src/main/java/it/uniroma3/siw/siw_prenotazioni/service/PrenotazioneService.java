@@ -119,18 +119,22 @@ public class PrenotazioneService {
         return prenotazioneRepository.findAllByUser();
     }
 
-    @Transactional (isolation = Isolation.SERIALIZABLE)
-    public void modifica(Long id, LocalDate data, LocalTime ora, User user){
-        Prenotazione prenotazione = getPrenotazione(id);
+    // Controlli comuni e salvataggio della nuova data/ora (usato da utente e admin)
+    private void cambiaDataOra(Prenotazione prenotazione, LocalDate data, LocalTime ora){
         Servizio servizio = prenotazione.getServizio();
-        
-        controllaProprietario(prenotazione, user);
         controlloOra(ora, data, servizio.getDurata());
-        controllaSovrapposizioni(servizio, data, ora, id);  
-        
+        controllaSovrapposizioni(servizio, data, ora, prenotazione.getId());
+
         prenotazione.setData(data);
         prenotazione.setOra(ora);
         prenotazioneRepository.save(prenotazione);
+    }
+
+    @Transactional (isolation = Isolation.SERIALIZABLE)
+    public void modifica(Long id, LocalDate data, LocalTime ora, User user){
+        Prenotazione prenotazione = getPrenotazione(id);
+        controllaProprietario(prenotazione, user);
+        cambiaDataOra(prenotazione, data, ora);
         logger.info("Prenotazione modificata: id={}", id);
     }
 
@@ -141,5 +145,21 @@ public class PrenotazioneService {
         prenotazioneRepository.delete(prenotazione);
         logger.info("Prenotazione annullata: id={}", id);
     }
-    
+
+    // Versioni per l'admin: nessun controllo sul proprietario.
+    // Vanno chiamate SOLO da controller sotto /admin/** (protetti da AuthConfig).
+    @Transactional (isolation = Isolation.SERIALIZABLE)
+    public void modificaComeAdmin(Long id, LocalDate data, LocalTime ora){
+        Prenotazione prenotazione = getPrenotazione(id);
+        cambiaDataOra(prenotazione, data, ora);
+        logger.info("Prenotazione modificata dall'admin: id={}", id);
+    }
+
+    @Transactional
+    public void annullaComeAdmin(Long id){
+        Prenotazione prenotazione = getPrenotazione(id);
+        prenotazioneRepository.delete(prenotazione);
+        logger.info("Prenotazione annullata dall'admin: id={}", id);
+    }
+
 }
