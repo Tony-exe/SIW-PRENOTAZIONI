@@ -3,6 +3,8 @@ package it.uniroma3.siw.siw_prenotazioni.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,16 +26,17 @@ public class Prenotazione {
     
     @NotNull
     @FutureOrPresent
+    @DateTimeFormat (iso = DateTimeFormat.ISO.DATE)
     private LocalDate data;
 
     @NotNull
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime ora;
 
     @ManyToOne
     @JoinColumn (nullable = false)
     private User user;
 
-    @NotNull
     @ManyToOne ()
     @JoinColumn (name = "servizio_id", nullable = false)
     private Servizio servizio;

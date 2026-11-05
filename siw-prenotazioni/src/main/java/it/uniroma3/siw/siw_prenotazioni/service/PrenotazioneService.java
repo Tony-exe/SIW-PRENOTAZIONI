@@ -41,12 +41,19 @@ public class PrenotazioneService {
 
     private void controlloOra(LocalTime ora, LocalDate data, int durata){
         LocalDateTime inizio = LocalDateTime.of(data,ora);
-        if (data.getDayOfWeek() == GIORNO_CHIUSURA || ora.isAfter(ORA_CHIUSURA) || ora.plusMinutes(durata).isAfter(ORA_CHIUSURA) || ora.isBefore(ORA_APERTURA)){
-            throw new FuoriOrarioException("La prenotazione è fuori dall'orario di lavoro.");
-        }else if (inizio.isBefore(LocalDateTime.now())){
-            throw new FuoriOrarioException("Non è possibile prenotare per una data passata.");
+        if (data.getDayOfWeek() == GIORNO_CHIUSURA){
+            throw new FuoriOrarioException("La domenica non si tengono lezioni: scegli un giorno dal lunedì al sabato.");
         }
-        
+        if (ora.isBefore(ORA_APERTURA) || ora.isAfter(ORA_CHIUSURA) || ora.plusMinutes(durata).isAfter(ORA_CHIUSURA)){
+            LocalTime ultimoInizio = ORA_CHIUSURA.minusMinutes(durata);
+            throw new FuoriOrarioException("Le lezioni si tengono dalle " + ORA_APERTURA + " alle " + ORA_CHIUSURA
+                    + ": questa lezione dura " + durata + " minuti, quindi deve iniziare tra le "
+                    + ORA_APERTURA + " e le " + ultimoInizio + ".");
+        }
+        if (inizio.isBefore(LocalDateTime.now())){
+            throw new FuoriOrarioException("Non è possibile prenotare per una data o un orario già passati.");
+        }
+
     }
 
     private void controllaSovrapposizioni(Servizio servizio, LocalDate data, LocalTime ora, Long idDaEscludere){

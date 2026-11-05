@@ -22,6 +22,8 @@
             <li>Durata: <span th:text="*{durata} + ' minuti'">60 minuti</span></li>
             <li>Prezzo: <span th:text="*{prezzo} + '€'">50€</span></li>
         </ul>
+        <a sec:authorize="isAuthenticated()" th:href="@{'/prenotazioni/new/' + ${servizio.id}}">Prenota</a>
+        <a sec:authorize="isAnonymous()" th:href="@{/login}">Accedi per prenotare</a>
     </main>
 </body>
 

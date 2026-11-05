@@ -8,6 +8,6 @@ import java.time.LocalTime;
 
 public class SlotNonDisponibileException extends RuntimeException{
     public SlotNonDisponibileException(LocalTime ora){
-        super("La prenotazione alle ore " + ora + " non è disponibile.");
+        super("L'insegnante è già impegnato in una lezione che si sovrappone alle ore " + ora + ": scegli un altro orario.");
     }
 }
