@@ -27,7 +27,7 @@
             <span th:if="${#fields.hasErrors('durata')}" th:errors="*{durata}"></span>
 
             <label for="prezzo">Prezzo</label>
-            <input type="number" min="1" step="0.01" th:field="*{prezzo}" id="prezzo" required>
+            <input type="number" min="0" step="0.01" th:field="*{prezzo}" id="prezzo" required>
             <span th:if="${#fields.hasErrors('prezzo')}" th:errors="*{prezzo}"></span>
 
             <label for="insegnante">Insegnante</label>

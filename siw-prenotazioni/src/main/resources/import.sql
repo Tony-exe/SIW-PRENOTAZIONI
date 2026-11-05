@@ -20,4 +20,5 @@ INSERT INTO servizio (nome, descrizione, durata, prezzo, insegnante_id) VALUES (
 INSERT INTO servizio (nome, descrizione, durata, prezzo, insegnante_id) VALUES ('Italiano', 'Grammatica e letteratura', 60, 30.0, (SELECT id FROM insegnante WHERE email = 'giulia.verdi@example.com'));
 INSERT INTO servizio (nome, descrizione, durata, prezzo, insegnante_id) VALUES ('Fisica', 'Lezioni di fisica', 60, 40.0, (SELECT id FROM insegnante WHERE email = 'mario.rossi@example.com'));
 
-
+-- PRENOTAZIONI DI PROVA
+INSERT INTO prenotazione (data, ora, servizio_id, user_id) VALUES ('2026-12-01', '10:00', (SELECT id FROM servizio WHERE nome = 'Matematica'), (SELECT id FROM users WHERE email = 'user1@example.com'));

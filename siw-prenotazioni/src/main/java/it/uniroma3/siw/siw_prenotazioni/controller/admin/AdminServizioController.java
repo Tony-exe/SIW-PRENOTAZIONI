@@ -1,5 +1,6 @@
 package it.uniroma3.siw.siw_prenotazioni.controller.admin;
 
+import it.uniroma3.siw.siw_prenotazioni.exception.ServizioConPrenotazioniFutureException;
 import it.uniroma3.siw.siw_prenotazioni.exception.ServizioExistsException;
 import it.uniroma3.siw.siw_prenotazioni.model.Servizio;
 import it.uniroma3.siw.siw_prenotazioni.service.InsegnanteService;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class AdminServizioController {
@@ -65,7 +69,7 @@ public class AdminServizioController {
     }
 
     @PostMapping("/admin/servizi/{id}")
-    public String modifica(  @Valid @ModelAttribute Servizio servizio, @PathVariable("id") Long id, BindingResult bindingResult, @RequestParam("insegnanteId") Long insegnanteId, Model model) {
+    public String modifica(  @Valid @ModelAttribute Servizio servizio, BindingResult bindingResult, @PathVariable("id") Long id, @RequestParam("insegnanteId") Long insegnanteId, Model model) {
         if(bindingResult.hasErrors()){
             servizio.setId(id);
             return mostraForm(model);
@@ -79,5 +83,17 @@ public class AdminServizioController {
         }
         return "redirect:/admin/servizi";
     }
+
+    @PostMapping("/admin/servizi/{id}/delete")
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            servizioService.elimina(id);
+        } catch (ServizioConPrenotazioniFutureException e) {
+            redirectAttributes.addFlashAttribute("errore", e.getMessage());
+        }
+        
+        return "redirect:/admin/servizi";
+    }
+    
 }
 
