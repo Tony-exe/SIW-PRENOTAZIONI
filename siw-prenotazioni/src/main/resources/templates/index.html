@@ -12,6 +12,7 @@
         <nav>
             <a th:href="@{/login}" sec:authorize="isAnonymous()">Accedi</a>
             <a th:href="@{/register}" sec:authorize="isAnonymous()">Registrati</a>
+            <a th:href="@{/servizi}">Materie</a>
             <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
                 <button type="submit">Esci</button>
             </form>

@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</title>
 </head>
+
 <body>
-	<header>
-		<h1 th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</h1>
+    <header>
+        <h1 th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</h1>
     </header>
-	<main>
-		<div th:if="${param.error}">Username o password errati</div>
+    <main>
+        <div th:if="${param.error}">Username o password errati</div>
 
         <div th:if="${param.registrato}">Registrazione completata con successo. Fai il login per accedere</div>
 
@@ -23,6 +25,7 @@
 
             <button type="submit">Accedi</button>
         </form>
-	</main>
+    </main>
 </body>
+
 </html>

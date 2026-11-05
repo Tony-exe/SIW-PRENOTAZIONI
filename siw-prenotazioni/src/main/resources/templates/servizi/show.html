@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${servizio.nome}">Materia</title>
+</head>
+
+<body>
+    <header>
+        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
+        <a th:href="@{/servizi}">Tutte le materie</a>
+    </header>
+    <main th:object="${servizio}">
+        <h2 th:text="*{nome}">Nome materia</h2>
+
+        <p th:if="*{descrizione}" th:text="*{descrizione}">Descrizione</p>
+
+        <ul>
+            <li> Insegnante: <span th:text="*{insegnante.nome} + ' ' + *{insegnante.cognome}">Mario Rossi</span></li>
+            <li>Durata: <span th:text="*{durata} + ' minuti'">60 minuti</span></li>
+            <li>Prezzo: <span th:text="*{prezzo} + '€'">50€</span></li>
+        </ul>
+    </main>
+</body>
+
+</html>
