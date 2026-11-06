@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,20 +19,20 @@ import it.uniroma3.siw.siw_prenotazioni.model.Role;
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {
-    
+
     private final DataSource dataSource;
 
-    public AuthConfig (DataSource dataSource){
+    public AuthConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
         manager.setUsersByUsernameQuery("SELECT username, password, 1 as enabled FROM credentials WHERE username=?");
         manager.setAuthoritiesByUsernameQuery("SELECT username, ruolo FROM credentials WHERE username=?");
@@ -41,32 +42,34 @@ public class AuthConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    // 1. AUTORIZZAZIONI: chi può accedere a cosa
-    http.authorizeHttpRequests(auth -> {
-        auth.requestMatchers(HttpMethod.GET, "/", "/index", "/login", "/register",
-                "/servizi", "/servizi/**", "/css/**", "/images/**", "/favicon.ico", "/error").permitAll();
-        auth.requestMatchers(HttpMethod.POST, "/login", "/register").permitAll();
-        auth.requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name());
-        auth.anyRequest().authenticated();
-    });
+        http.cors(Customizer.withDefaults());
+        // 1. AUTORIZZAZIONI: chi può accedere a cosa
+        http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers(HttpMethod.GET, "/", "/index", "/login", "/register",
+                    "/servizi", "/servizi/**", "/css/**", "/images/**", "/favicon.ico", "/error", "/rest/**")
+                    .permitAll();
+            auth.requestMatchers(HttpMethod.POST, "/login", "/register").permitAll();
+            auth.requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name());
+            auth.anyRequest().authenticated();
+        });
 
-    // 2. LOGIN
-    http.formLogin(form -> {
-        form.loginPage("/login").permitAll();
-        form.defaultSuccessUrl("/success", true);
-        form.failureUrl("/login?error=true");
-    });
+        // 2. LOGIN
+        http.formLogin(form -> {
+            form.loginPage("/login").permitAll();
+            form.defaultSuccessUrl("/success", true);
+            form.failureUrl("/login?error=true");
+        });
 
-    // 3. LOGOUT
-    http.logout(logout -> {
-        logout.logoutUrl("/logout");
-        logout.logoutSuccessUrl("/");
-        logout.invalidateHttpSession(true);
-        logout.deleteCookies("JSESSIONID");
-        logout.clearAuthentication(true);
-        logout.permitAll();
-    });
+        // 3. LOGOUT
+        http.logout(logout -> {
+            logout.logoutUrl("/logout");
+            logout.logoutSuccessUrl("/");
+            logout.invalidateHttpSession(true);
+            logout.deleteCookies("JSESSIONID");
+            logout.clearAuthentication(true);
+            logout.permitAll();
+        });
 
-    return http.build();
-}
+        return http.build();
+    }
 }
