@@ -5,13 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${titolo} ?: 'Prenotazione ' + ${servizio.nome} ">Prenotazione</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <header>
-        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
-        <a th:href="@{/servizi}">Tutte le materie</a>
-    </header>
+    <header th:replace="~{fragments/base :: header}"></header>
     <main>
         <h2><a th:text="${servizio.nome}" th:href="@{'/servizi/'+ ${servizio.id}}">Materia</a></h2>
         <form th:action="${prenotazione.id == null} ? @{'/prenotazioni/new/' + ${servizio.id}} : @{'/prenotazioni/' + ${prenotazione.id} + '/edit'}" method="post" th:object="${prenotazione}">

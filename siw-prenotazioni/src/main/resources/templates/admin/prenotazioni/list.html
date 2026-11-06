@@ -5,17 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tutte le prenotazioni</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <header>
-        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
-        <a th:href="@{/admin/servizi}">Gestione materie</a>
-    </header>
+    <header th:replace="~{fragments/base :: header}"></header>
     <main>
         <h2>Tutte le prenotazioni</h2>
-        <p th:if="${messaggio}" th:text="${messaggio}"></p>
-        <p th:if="${errore}" th:text="${errore}"></p>
+        <p class="messaggio" th:if="${messaggio}" th:text="${messaggio}"></p>
+        <p class="errore" th:if="${errore}" th:text="${errore}"></p>
 
         <p th:if="${prenotazioni.isEmpty()}">Nessuna prenotazione presente</p>
 

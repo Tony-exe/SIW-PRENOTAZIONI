@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${servizio.id == null} ? 'Nuova materia' : 'Modifica materia' ">Nuova materia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <header>
-        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
-        <a th:href="@{/servizi}">Tutte le materie</a>
-    </header>
+    <header th:replace="~{fragments/base :: header}"></header>
     <main>
+        <h2 th:text="${servizio.id == null} ? 'Nuova materia' : 'Modifica materia'">Nuova materia</h2>
         <form th:action="${servizio.id == null} ? @{/admin/servizi/new} : @{'/admin/servizi/' + ${servizio.id}}" method="post" th:object="${servizio}">
             <label for="nome">Nome</label>
             <input type="text" th:field="*{nome}" id="nome" required>

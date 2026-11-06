@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Materie</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <header>
-        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
-    </header>
+    <header th:replace="~{fragments/base :: header}"></header>
     <main>
-        <p th:if="${errore}" th:text="${errore}">Errore</p>
+        <h2>Gestione materie</h2>
+        <p class="errore" th:if="${errore}" th:text="${errore}">Errore</p>
 
         <a th:href="@{/admin/prenotazioni}">Tutte le prenotazioni</a>
         <a th:href="@{/admin/servizi/new}">Nuova materia</a>

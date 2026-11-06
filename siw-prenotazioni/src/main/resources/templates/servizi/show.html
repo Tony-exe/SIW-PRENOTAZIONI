@@ -5,13 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${servizio.nome}">Materia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <header>
-        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
-        <a th:href="@{/servizi}">Tutte le materie</a>
-    </header>
+    <header th:replace="~{fragments/base :: header}"></header>
     <main th:object="${servizio}">
         <h2 th:text="*{nome}">Nome materia</h2>
 

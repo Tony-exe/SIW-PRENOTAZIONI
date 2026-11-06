@@ -4,24 +4,12 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-	<header>
-		<h1 th:text="${titolo} ?: 'Prenotazioni'">Prenotazioni</h1>
-        <span sec:authorize="isAuthenticated()" th:text="'Ciao, ' + ${userDetails.username} + ' '">Ciao</span>
-        <nav>
-            <a th:href="@{/login}" sec:authorize="isAnonymous()">Accedi</a>
-            <a th:href="@{/register}" sec:authorize="isAnonymous()">Registrati</a>
-            <a th:href="@{/admin/servizi}" sec:authorize="hasAuthority('ADMIN')">Materie</a>
-            <a th:href="@{/servizi}" sec:authorize="!hasAuthority('ADMIN')">Materie</a>
-            <a th:href="@{/prenotazioni}" sec:authorize="isAuthenticated() and !hasAuthority('ADMIN')">Le tue prenotazioni</a>
-            <a th:href="@{/admin/prenotazioni}" sec:authorize="hasAuthority('ADMIN')">Tutte le prenotazioni</a>
-            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-                <button type="submit">Esci</button>
-            </form>
-        </nav>
-    </header>
+	<header th:replace="~{fragments/base :: header}"></header>
 	<main>
+		<h2>Benvenuto</h2>
 		<p>Benvenuto nella pagina delle prenotazioni.</p>
 	</main>
 </body>

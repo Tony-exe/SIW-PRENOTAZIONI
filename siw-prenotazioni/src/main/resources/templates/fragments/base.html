@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+    <!--
+        Header comune a tutte le pagine.
+        Si include in ogni template con:
+            <header th:replace="~{fragments/base :: header}"></header>
+        Il nome dell'utente viene da #authentication (Spring Security),
+        non da ${userDetails}: così funziona anche nelle pagine di errore,
+        dove il GlobalController non aggiunge userDetails al model.
+    -->
+    <header th:fragment="header">
+        <h1><a th:href="@{/}">Lezioni private</a></h1>
+        <nav>
+            <!-- utenti e visitatori -->
+            <a th:href="@{/servizi}" sec:authorize="!hasAuthority('ADMIN')">Materie</a>
+            <a href="http://localhost:5173" sec:authorize="!hasAuthority('ADMIN')">Catalogo</a>
+            <a th:href="@{/prenotazioni}" sec:authorize="isAuthenticated() and !hasAuthority('ADMIN')">Le mie prenotazioni</a>
+
+            <!-- solo admin -->
+            <a th:href="@{/admin/servizi}" sec:authorize="hasAuthority('ADMIN')">Gestione materie</a>
+            <a th:href="@{/admin/prenotazioni}" sec:authorize="hasAuthority('ADMIN')">Tutte le prenotazioni</a>
+
+            <!-- non loggati -->
+            <a th:href="@{/login}" sec:authorize="isAnonymous()">Accedi</a>
+            <a th:href="@{/register}" sec:authorize="isAnonymous()">Registrati</a>
+
+            <!-- loggati -->
+            <span sec:authorize="isAuthenticated()" th:text="'Ciao, ' + ${#authentication.name}">Ciao</span>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button type="submit">Esci</button>
+            </form>
+        </nav>
+    </header>
+</body>
+
+</html>

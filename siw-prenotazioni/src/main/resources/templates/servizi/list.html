@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Materie</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <header>
-        <h1><a th:text="${titolo} ?: 'Prenotazioni'" th:href="@{/}">Prenotazioni</a></h1>
-    </header>
+    <header th:replace="~{fragments/base :: header}"></header>
     <main>
+        <h2>Materie</h2>
         <p th:if="${servizi.isEmpty()}">Nessuna materia disponibile</p>
         <ul>
             <li th:each="servizio : ${servizi}">
