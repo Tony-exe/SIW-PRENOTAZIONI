@@ -43,7 +43,7 @@ public class ServizioService {
 
     @Transactional (readOnly = true)
     public List<Servizio> getTuttiServizi(){
-        return servizioRepository.findAllByOrderByNomeAsc();
+        return servizioRepository.findAllConInsegnante();
     }
 
     @Transactional
