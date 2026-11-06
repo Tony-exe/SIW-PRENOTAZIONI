@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page not found</title>
+</head>
+
+<body>
+    <header>
+        <h1><a th:href="@{/}">Prenotazioni</a></h1>
+    </header>
+    <main>
+        <h2>404 - Page not found</h2>
+        <p th:if="${messaggio}" th:text="${messaggio}"></p>
+        <a th:href="@{/}">Torna alla home</a>
+    </main>
+</body>
+
+</html>
