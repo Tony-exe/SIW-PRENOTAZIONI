@@ -38,14 +38,29 @@ body {
 a {
     color: var(--primario);
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 a:hover {
+    color: var(--primario-scuro);
     text-decoration: underline;
 }
 
 h2 {
     margin-top: 0;
+}
+
+/* --- Animazioni riutilizzate --- */
+/* comparsa dal basso: usata dalla card principale e dai messaggi */
+@keyframes comparsa {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* --- Header e navigazione --- */
@@ -58,6 +73,9 @@ header {
     align-items: center;
     gap: 12px 24px;
     box-shadow: var(--ombra);
+    position: sticky;           /* l'header resta in alto quando si scorre la pagina */
+    top: 0;
+    z-index: 10;
 }
 
 header h1 {
@@ -67,8 +85,33 @@ header h1 {
 }
 
 header a,
-header h1 a {
+header h1 a,
+header a:hover {
     color: white;
+    text-decoration: none;
+}
+
+/* link della nav: una sottolineatura che "cresce" dal centro al passaggio del mouse */
+nav a {
+    position: relative;
+    padding: 2px 0;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+nav a:hover::after {
+    transform: scaleX(1);
 }
 
 nav {
@@ -89,6 +132,12 @@ header button:hover {
     background: rgba(255, 255, 255, 0.15);
 }
 
+/* niente bolle sul pulsante "Esci": nell'header resta sobrio */
+header button::before,
+header button::after {
+    display: none;
+}
+
 /* --- Contenuto principale: una "card" bianca centrata --- */
 main {
     max-width: 960px;
@@ -97,6 +146,72 @@ main {
     background: var(--superficie);
     border-radius: var(--raggio);
     box-shadow: var(--ombra);
+    animation: comparsa 0.4s ease-out;   /* la card entra dal basso all'apertura della pagina */
+}
+
+/* box aggiuntivo sotto la card principale (es. descrizione del progetto in home):
+   stesso aspetto del main, compare con un piccolo ritardo dopo di lui */
+.box {
+    max-width: 960px;
+    margin: 0 auto 32px;
+    padding: 24px 32px;
+    background: var(--superficie);
+    border-radius: var(--raggio);
+    box-shadow: var(--ombra);
+    border-top: 4px solid var(--primario);
+    animation: comparsa 0.4s ease-out 0.15s both;
+}
+
+.box h3 {
+    margin-top: 0;
+    color: var(--primario);
+}
+
+/* nel box l'elenco è un normale elenco puntato (non le righe "a schede" delle pagine) */
+.box ul {
+    padding-left: 20px;
+}
+
+.box li {
+    margin-bottom: 6px;
+}
+
+/* testo piccolo e grigio, per note a margine */
+.nota {
+    color: var(--testo-secondario);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+/* link "di servizio" messi direttamente nel main (es. Nuova materia): un po' di spazio tra loro */
+main > a {
+    display: inline-block;
+    margin: 0 16px 8px 0;
+    font-weight: 500;
+}
+
+/* pagine che contengono una form (login, registrazione, nuova materia, prenotazione...):
+   card più stretta, con titolo e form centrati */
+main:has(> form) {
+    max-width: 540px;
+}
+
+main:has(> form) > h2 {
+    text-align: center;
+}
+
+main > form {
+    margin: 0 auto;
+}
+
+/* nelle form centrate il pulsante principale occupa tutta la larghezza
+   e il link "Annulla" va centrato sotto */
+main > form > button {
+    align-self: stretch;
+}
+
+main > form > button + a {
+    align-self: center;
 }
 
 /* --- Form --- */
@@ -121,6 +236,13 @@ textarea {
     border-radius: 6px;
     font: inherit;
     background: white;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;   /* il bordo blu compare dolcemente */
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: #9ca3af;
 }
 
 textarea {
@@ -168,7 +290,7 @@ nav form > button {
 }
 
 /* --- Pulsanti --- */
-button {
+/* button {
     background: var(--primario);
     color: white;
     border: none;
@@ -181,6 +303,101 @@ button {
 
 button:hover {
     background: var(--primario-scuro);
+}*/
+/* From Uiverse.io by zjssun */ 
+button {
+  position: relative;
+  z-index: 0; /* il pulsante fa da "livello": le bolle restano attaccate a lui e non finiscono dietro la card */
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: #7d2ae8;
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+button:before,
+button:after {
+  position: absolute;
+  content: "";
+  width: 150%;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -1; /* dietro al testo del pulsante, ma sopra la pagina */
+  background-repeat: no-repeat;
+}
+
+button:hover:before {
+  top: -70%;
+  background-image: radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, transparent 20%, #7d2ae8 20%, transparent 30%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #7d2ae8 15%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%);
+  background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+    10% 10%, 18% 18%;
+  background-position: 50% 120%;
+  animation: greentopBubbles 0.6s ease;
+}
+
+@keyframes greentopBubbles {
+  0% {
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+      40% 90%, 55% 90%, 70% 90%;
+  }
+
+  50% {
+    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+      50% 50%, 65% 20%, 90% 30%;
+  }
+
+  100% {
+    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+      50% 40%, 65% 10%, 90% 20%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+
+button:hover::after {
+  bottom: -70%;
+  background-image: radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #7d2ae8 15%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%),
+    radial-gradient(circle, #7d2ae8 20%, transparent 20%);
+  background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+  background-position: 50% 0%;
+  animation: greenbottomBubbles 0.6s ease;
+}
+
+@keyframes greenbottomBubbles {
+  0% {
+    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
+      70% -10%, 70% 0%;
+  }
+
+  50% {
+    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+      105% 0%;
+  }
+
+  100% {
+    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+      110% 10%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
 }
 
 /* azioni distruttive: le form con il confirm() (Elimina, Annulla prenotazione) */
@@ -198,6 +415,8 @@ form[onsubmit] button:hover {
     padding: 10px 14px;
     border-radius: 6px;
     font-weight: 500;
+    border-left: 4px solid currentColor;     /* barretta laterale dello stesso colore del testo */
+    animation: comparsa 0.35s ease-out 0.15s both;   /* entra subito dopo la card */
 }
 
 .messaggio {
@@ -222,12 +441,20 @@ main li {
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 16px;
-    padding: 12px 4px;
+    padding: 12px 10px;
     border-bottom: 1px solid #eceff3;
+    border-radius: 6px;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 main li:last-child {
     border-bottom: none;
+}
+
+/* riga della lista evidenziata e leggermente spostata al passaggio del mouse */
+main li:hover {
+    background: #f5f8fc;
+    transform: translateX(4px);
 }
 
 /* --- Tabelle (prenotazioni) --- */
@@ -250,8 +477,12 @@ th {
     font-weight: 600;
 }
 
+tbody tr {
+    transition: background 0.2s ease;
+}
+
 tbody tr:hover {
-    background: #f8fafc;
+    background: #f5f8fc;
 }
 
 /* link e pulsante nella colonna Azioni: affiancati */
@@ -267,6 +498,11 @@ td form + a {
         padding: 20px 16px;
     }
 
+    .box {
+        margin: 0 16px 16px;
+        padding: 20px 16px;
+    }
+
     header {
         padding: 12px 16px;
     }
@@ -275,5 +511,15 @@ td form + a {
     table {
         display: block;
         overflow-x: auto;
+    }
+}
+
+/* --- Accessibilità: chi ha chiesto al sistema operativo meno animazioni non le vede --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
     }
 }

@@ -9,8 +9,30 @@
 <body>
 	<header th:replace="~{fragments/base :: header}"></header>
 	<main>
-		<h2>Benvenuto</h2>
-		<p>Benvenuto nella pagina delle prenotazioni.</p>
+		<!-- "Benvenuto, Mario" se l'utente ha fatto il login, solo "Benvenuto" altrimenti -->
+		<h2 th:text="${utente != null} ? 'Benvenuto, ' + ${utente.nome} : 'Benvenuto'">Benvenuto</h2>
+		<p sec:authorize="isAnonymous()">Accedi o registrati per prenotare la tua prima lezione.</p>
+		<p sec:authorize="isAuthenticated() and !hasAuthority('ADMIN')">Scegli una materia e prenota la tua prossima lezione, oppure controlla le tue prenotazioni.</p>
+		<p sec:authorize="hasAuthority('ADMIN')">Dall'area di gestione puoi modificare le materie e tenere sotto controllo tutte le prenotazioni.</p>
 	</main>
+
+	<section class="box">
+		<h3>Il progetto</h3>
+		<p>
+			<strong>Lezioni private</strong> è il sistema di prenotazione di un piccolo centro che offre lezioni
+			individuali di Matematica, Fisica, Informatica e Italiano. Ogni materia è tenuta da un insegnante
+			e ha una durata e un prezzo.
+		</p>
+		<ul>
+			<li>Consulta le materie, anche dal <strong>catalogo</strong> con filtri per insegnante e prezzo.</li>
+			<li>Prenota una lezione scegliendo data e fascia oraria: il sistema controlla gli orari di apertura
+				(lunedì-sabato, 9:00-19:00) e che l'insegnante sia libero.</li>
+			<li>Modifica o annulla le tue prenotazioni in qualsiasi momento.</li>
+		</ul>
+		<p class="nota">
+			Progetto per il corso di Sistemi Informativi su Web, Università Roma Tre:
+			Spring Boot, JPA/Hibernate, PostgreSQL, Thymeleaf e React.
+		</p>
+	</section>
 </body>
 </html>
